@@ -1,216 +1,481 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name — Portfolio</title>
 
-    <title>Your Name — Portfolio</title>
-    <meta name="description" content="Portfolio of Your Name">
+<style>
+* { box-sizing: border-box; }
 
-    <link rel="stylesheet" href="style.css">
+body {
+  margin: 0;
+  background: #f8f8f6;
+  color: #171717;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  padding: 35px 5%;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.name {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+header span {
+  color: #777;
+  font-size: 13px;
+}
+
+main {
+  max-width: 1500px;
+  padding: 70px 5%;
+  margin: auto;
+}
+
+h1 {
+  font-size: clamp(42px, 7vw, 90px);
+  letter-spacing: -.06em;
+  font-weight: 500;
+  margin: 0 0 15px;
+}
+
+.intro {
+  color: #666;
+  margin-bottom: 65px;
+  line-height: 1.7;
+}
+
+#projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 55px 25px;
+}
+
+.project {
+  cursor: pointer;
+  min-width: 0;
+}
+
+.cover {
+  aspect-ratio: 4 / 3;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.cover canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.project h2 {
+  font-size: 19px;
+  font-weight: 500;
+  margin: 17px 0 5px;
+}
+
+.project p {
+  color: #777;
+  font-size: 13px;
+  margin: 0;
+}
+
+#galleryView { display: none; }
+
+.back {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+#galleryTitle {
+  margin-bottom: 40px;
+}
+
+#slides {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px 15px;
+}
+
+.slide {
+  cursor: pointer;
+  min-width: 0;
+}
+
+.slide canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #eee;
+}
+
+.slide p {
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+}
+
+footer {
+  padding: 30px 5%;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Full-screen slide viewer */
+
+#viewer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgba(15, 15, 15, .97);
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+
+#viewer.open { display: flex; }
+
+#largeSlide {
+  max-width: 88vw;
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.viewerTop {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  right: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.viewerTop button,
+.arrow {
+  color: white;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 28px;
+  padding: 10px;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#prev { left: 12px; }
+#next { right: 12px; }
+
+#counter {
+  position: absolute;
+  bottom: 18px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+@media (max-width: 650px) {
+  header { padding: 23px 5%; }
+  header span { display: none; }
+  main { padding-top: 45px; }
+  #projects { grid-template-columns: 1fr; gap: 35px; }
+  #slides { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 10px; }
+  #largeSlide { max-width: 100vw; max-height: 75vh; }
+  .arrow { font-size: 22px; }
+}
+</style>
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <header class="header">
-        <a href="#" class="logo">YOUR NAME</a>
+<header>
+  <a class="name" href="#" id="homeLink">YOUR NAME</a>
+  <span>SELECTED WORK · PORTFOLIO</span>
+</header>
 
-        <nav>
-            <a href="#projects">Projects</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+<main>
+  <section id="homeView">
+    <h1>Selected work.</h1>
+    <p class="intro">
+      A selection of my projects.<br>
+      Explore each project below.
+    </p>
+    <div id="projects"></div>
+  </section>
 
+  <section id="galleryView">
+    <button class="back" id="backButton">← All projects</button>
+    <h1 id="galleryTitle"></h1>
+    <p class="intro" id="galleryDescription"></p>
+    <div id="slides"></div>
+  </section>
+</main>
 
-    <!-- INTRO -->
-    <main>
+<footer>© 2026 YOUR NAME</footer>
 
-        <section class="intro">
-            <p class="eyebrow">PORTFOLIO · 2026</p>
+<div id="viewer" role="dialog" aria-modal="true"
+     aria-label="Slide viewer">
+  <div class="viewerTop">
+    <span id="viewerTitle"></span>
+    <button id="closeButton" aria-label="Close">✕</button>
+  </div>
+  <button class="arrow" id="prev" aria-label="Previous slide">←</button>
+  <canvas id="largeSlide"></canvas>
+  <button class="arrow" id="next" aria-label="Next slide">→</button>
+  <div id="counter"></div>
+</div>
 
-            <h1>
-                Your Name
-            </h1>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-            <p class="intro-text">
-                Designer / Architect / Artist
-            </p>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-            <p class="description">
-                I am a designer interested in creating thoughtful,
-                functional and visually engaging spaces and objects.
-                My work explores the relationship between people,
-                materials and the environment.
-            </p>
+/* EDIT YOUR PROJECTS HERE */
 
-            <a href="portfolio.pdf" class="button" target="_blank">
-                View full portfolio →
-            </a>
-        </section>
+const projects = [
+  {
+    title: "Project One",
+    category: "Architecture · 2026",
+    description: "A short description of the project.",
+    file: "project-1.pdf"
+  },
+  {
+    title: "Project Two",
+    category: "Design · 2025",
+    description: "A short description of the project.",
+    file: "project-2.pdf"
+  },
+  {
+    title: "Project Three",
+    category: "Research · 2025",
+    description: "A short description of the project.",
+    file: "project-3.pdf"
+  },
+  {
+    title: "Project Four",
+    category: "Design · 2024",
+    description: "A short description of the project.",
+    file: "project-4.pdf"
+  },
+  {
+    title: "Project Five",
+    category: "Other work · 2024",
+    description: "A short description of the project.",
+    file: "project-5.pdf"
+  }
+];
 
+const cache = new Map();
+let currentProject = null;
+let currentPage = 1;
+let renderToken = 0;
 
-        <!-- PROJECTS -->
-        <section id="projects" class="projects">
+async function loadPDF(project) {
+  if (!cache.has(project.file)) {
+    const promise = pdfjsLib.getDocument(project.file).promise;
+    cache.set(project.file, promise);
+  }
+  return cache.get(project.file);
+}
 
-            <div class="section-title">
-                <p class="eyebrow">SELECTED WORK</p>
-                <h2>Projects</h2>
-            </div>
+async function renderPage(pdf, pageNumber, canvas, maxWidth, maxHeight) {
+  const page = await pdf.getPage(pageNumber);
+  const original = page.getViewport({ scale: 1 });
 
+  const scale = Math.min(
+    maxWidth / original.width,
+    maxHeight / original.height
+  );
 
-            <!-- PROJECT 01 -->
-            <article class="project">
+  const viewport = page.getViewport({ scale });
+  const ratio = window.devicePixelRatio || 1;
+  const context = canvas.getContext("2d");
 
-                <div class="project-heading">
-                    <span>01</span>
+  canvas.width = Math.floor(viewport.width * ratio);
+  canvas.height = Math.floor(viewport.height * ratio);
+  canvas.style.width = viewport.width + "px";
+  canvas.style.height = viewport.height + "px";
 
-                    <div>
-                        <h3>Project Name</h3>
-                        <p>Architecture · 2026</p>
-                    </div>
-                </div>
+  await page.render({
+    canvasContext: context,
+    viewport: viewport,
+    transform: ratio !== 1 ? [ratio, 0, 0, ratio, 0, 0] : null
+  }).promise;
+}
 
-                <p class="project-description">
-                    Short description of the project. Explain what the
-                    project was about, your role and what you wanted
-                    to achieve.
-                </p>
+async function init() {
+  const container = document.getElementById("projects");
 
-                <div class="project-images">
+  for (let i = 0; i < projects.length; i++) {
+    const project = projects[i];
+    const card = document.createElement("article");
+    card.className = "project";
+    card.innerHTML = `
+      <div class="cover"><canvas></canvas></div>
+      <h2>${project.title}</h2>
+      <p>${project.category}</p>
+    `;
 
-                    <img
-                        src="images/project-01-01.jpg"
-                        alt="Project Name — view 01"
-                    >
+    card.addEventListener("click", () => openProject(i));
+    container.appendChild(card);
 
-                    <img
-                        src="images/project-01-02.jpg"
-                        alt="Project Name — view 02"
-                    >
+    try {
+      const pdf = await loadPDF(project);
+      await renderPage(
+        pdf, 1, card.querySelector("canvas"), 900, 650
+      );
+    } catch (error) {
+      card.querySelector(".cover").textContent =
+        "Could not load PDF";
+      console.error(error);
+    }
+  }
+}
 
-                </div>
+async function openProject(index) {
+  currentProject = index;
 
-            </article>
+  document.getElementById("homeView").style.display = "none";
+  document.getElementById("galleryView").style.display = "block";
+  document.getElementById("galleryTitle").textContent =
+    projects[index].title;
+  document.getElementById("galleryDescription").textContent =
+    projects[index].description;
 
+  const slides = document.getElementById("slides");
+  slides.innerHTML = "<p>Loading project pages…</p>";
 
-            <!-- PROJECT 02 -->
-            <article class="project">
+  try {
+    const pdf = await loadPDF(projects[index]);
+    slides.innerHTML = "";
 
-                <div class="project-heading">
-                    <span>02</span>
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const card = document.createElement("div");
+      card.className = "slide";
+      card.innerHTML = `<canvas></canvas><p>PAGE ${String(n).padStart(2, "0")}</p>`;
 
-                    <div>
-                        <h3>Another Project</h3>
-                        <p>Design · 2025</p>
-                    </div>
-                </div>
+      card.addEventListener("click", () => showSlide(n));
+      slides.appendChild(card);
 
-                <p class="project-description">
-                    Short description of the project. Add a few sentences
-                    about the concept, process and outcome.
-                </p>
+      renderPage(pdf, n, card.querySelector("canvas"), 650, 850)
+        .catch(console.error);
+    }
+  } catch (error) {
+    slides.textContent =
+      "Could not load this PDF. Check the filename.";
+    console.error(error);
+  }
 
-                <div class="project-images">
+  window.scrollTo(0, 0);
+}
 
-                    <img
-                        src="images/project-02-01.jpg"
-                        alt="Another Project — view 01"
-                    >
+async function showSlide(pageNumber) {
+  currentPage = pageNumber;
+  const token = ++renderToken;
+  const project = projects[currentProject];
+  const pdf = await loadPDF(project);
 
-                    <img
-                        src="images/project-02-02.jpg"
-                        alt="Another Project — view 02"
-                    >
+  document.getElementById("viewer").classList.add("open");
+  document.getElementById("viewerTitle").textContent = project.title;
+  document.getElementById("counter").textContent =
+    `${currentPage} / ${pdf.numPages}`;
 
-                </div>
+  await renderPage(
+    pdf, currentPage, document.getElementById("largeSlide"),
+    window.innerWidth * 0.85,
+    window.innerHeight * 0.78
+  );
 
-            </article>
+  if (token !== renderToken) return;
 
+  document.getElementById("counter").textContent =
+    `${currentPage} / ${pdf.numPages}`;
+}
 
-            <!-- PROJECT 03 -->
-            <article class="project">
+async function changeSlide(direction) {
+  if (currentProject === null) return;
+  const pdf = await loadPDF(projects[currentProject]);
+  const nextPage = currentPage + direction;
 
-                <div class="project-heading">
-                    <span>03</span>
+  if (nextPage >= 1 && nextPage <= pdf.numPages) {
+    await showSlide(nextPage);
+  }
+}
 
-                    <div>
-                        <h3>Third Project</h3>
-                        <p>Research · 2025</p>
-                    </div>
-                </div>
+function closeViewer() {
+  document.getElementById("viewer").classList.remove("open");
+  renderToken++;
+}
 
-                <p class="project-description">
-                    Short description of the project and your role in it.
-                </p>
+function goHome() {
+  closeViewer();
+  document.getElementById("galleryView").style.display = "none";
+  document.getElementById("homeView").style.display = "block";
+  currentProject = null;
+  window.scrollTo(0, 0);
+}
 
-                <div class="project-images">
+document.getElementById("prev").onclick = () => changeSlide(-1);
+document.getElementById("next").onclick = () => changeSlide(1);
+document.getElementById("closeButton").onclick = closeViewer;
+document.getElementById("backButton").onclick = goHome;
+document.getElementById("homeLink").onclick = (event) => {
+  event.preventDefault();
+  goHome();
+};
 
-                    <img
-                        src="images/project-03-01.jpg"
-                        alt="Third Project — view 01"
-                    >
+document.getElementById("viewer").addEventListener("click", (event) => {
+  if (event.target.id === "viewer") closeViewer();
+});
 
-                    <img
-                        src="images/project-03-02.jpg"
-                        alt="Third Project — view 02"
-                    >
+document.addEventListener("keydown", (event) => {
+  if (!document.getElementById("viewer").classList.contains("open")) return;
 
-                </div>
+  if (event.key === "ArrowRight") changeSlide(1);
+  if (event.key === "ArrowLeft") changeSlide(-1);
+  if (event.key === "Escape") closeViewer();
+});
 
-            </article>
+document.getElementById("viewer").addEventListener("wheel", (event) => {
+  if (!document.getElementById("viewer").classList.contains("open")) return;
+  event.preventDefault();
+  if (Math.abs(event.deltaY) > 20) {
+    changeSlide(event.deltaY > 0 ? 1 : -1);
+  }
+}, { passive: false });
 
-        </section>
-
-
-        <!-- ABOUT -->
-        <section id="about" class="about">
-
-            <div class="section-title">
-                <p class="eyebrow">ABOUT</p>
-                <h2>About me</h2>
-            </div>
-
-            <div class="about-content">
-
-                <p>
-                    I am a [your profession] based in Helsinki, Finland.
-                    My work focuses on [your interests].
-                </p>
-
-                <p>
-                    I am particularly interested in [interest],
-                    [interest] and [interest].
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- CONTACT -->
-        <section id="contact" class="contact">
-
-            <p class="eyebrow">GET IN TOUCH</p>
-
-            <h2>Let's talk.</h2>
-
-            <a href="mailto:your@email.com">
-                your@email.com
-            </a>
-
-        </section>
-
-    </main>
-
-
-    <!-- FOOTER -->
-    <footer>
-        <p>© 2026 Your Name</p>
-
-        <a href="#top">Back to top ↑</a>
-    </footer>
+init();
+</script>
 
 </body>
 </html>
