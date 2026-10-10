@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,10 +79,11 @@ h1 {
   overflow: hidden;
 }
 
-.cover canvas {
+.cover img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .project h2 {
@@ -108,9 +109,7 @@ h1 {
   margin-bottom: 40px;
 }
 
-#galleryTitle {
-  margin-bottom: 40px;
-}
+#galleryTitle { margin-bottom: 40px; }
 
 #slides {
   display: grid;
@@ -142,8 +141,6 @@ footer {
   font-size: 12px;
   color: #777;
 }
-
-/* Full-screen slide viewer */
 
 #viewer {
   display: none;
@@ -177,8 +174,7 @@ footer {
   font-size: 13px;
 }
 
-.viewerTop button,
-.arrow {
+.viewerTop button, .arrow {
   color: white;
   background: transparent;
   border: 0;
@@ -218,7 +214,7 @@ footer {
 <body>
 
 <header>
-  <a class="name" href="#" id="homeLink">YOUR NAME</a>
+  <a class="name" href="#" id="homeLink">Emil Kähkönen</a>
   <span>SELECTED WORK · PORTFOLIO</span>
 </header>
 
@@ -240,10 +236,9 @@ footer {
   </section>
 </main>
 
-<footer>© 2026 YOUR NAME</footer>
+<footer>© 2026 Emil Kähkönen</footer>
 
-<div id="viewer" role="dialog" aria-modal="true"
-     aria-label="Slide viewer">
+<div id="viewer" role="dialog" aria-modal="true" aria-label="Slide viewer">
   <div class="viewerTop">
     <span id="viewerTitle"></span>
     <button id="closeButton" aria-label="Close">✕</button>
@@ -255,48 +250,47 @@ footer {
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-/* EDIT YOUR PROJECTS HERE */
+/* PROJECTS */
 
 const projects = [
   {
     title: "01 - Chapel",
     category: "EPFL · 2025",
     description: "Bio-Sourced Self-Bearing Watertight Building Envelopes, St. Loup Chapel.",
-    file: "project-1.pdf"
-    cover: "covers/cover-1.jpg"
+    file: "01 - Chapel.pdf",
+    cover: "covers/01 - Chapel.jpg"
   },
   {
     title: "02 - Map",
     category: "EPFL · 2025",
     description: "The development of Zürich.",
-    file: "project-2.pdf"
-    cover: "covers/cover-2.jpg"
+    file: "02 - Map.pdf",
+    cover: "covers/02 - Map.jpg"
   },
   {
     title: "03 - Lapinlahti",
     category: "Aalto · 2026",
     description: "A Reuse Plan for Lapinlahti Hospital.",
-    file: "project-3.pdf"
-    cover: "covers/cover-3.jpg
+    file: "03 - Lapinlahti.pdf",
+    cover: "covers/03 - Lapinlahti.jpg"
   },
   {
     title: "04 - Cultural Centre",
     category: "Aalto · 2025",
     description: "A Solid Brick Structure for Culture in Taka-Töölö.",
-    file: "project-4.pdf"
-    cover: "covers/cover-4.jpg"
+    file: "04 - Cultural Centre.pdf",
+    cover: "covers/04 - Cultural Centre.jpg"
   },
   {
     title: "05 - Apartment Building",
     category: "Aalto · 2025",
-    description: "A Residential Building Shaped by a Rythm of Columns in Myllypuro.",
-    file: "project-5.pdf"
-    cover: "covers/cover-5.jpg"
+    description: "A Residential Building Shaped by a Rhythm of Columns in Myllypuro.",
+    file: "05 - Apartment Building.pdf",
+    cover: "covers/05 - Apartment Building.jpg"
   }
 ];
 
@@ -338,7 +332,6 @@ async function renderPage(pdf, pageNumber, canvas, maxWidth, maxHeight) {
   }).promise;
 }
 
-
 async function init() {
   const container = document.getElementById("projects");
 
@@ -352,7 +345,6 @@ async function init() {
         <img
           src="${project.cover}"
           alt="${project.title} cover"
-          style="width:100%;height:100%;object-fit:cover"
         >
       </div>
       <h2>${project.title}</h2>
@@ -364,14 +356,12 @@ async function init() {
   }
 }
 
-
 async function openProject(index) {
   currentProject = index;
 
   document.getElementById("homeView").style.display = "none";
   document.getElementById("galleryView").style.display = "block";
-  document.getElementById("galleryTitle").textContent =
-    projects[index].title;
+  document.getElementById("galleryTitle").textContent = projects[index].title;
   document.getElementById("galleryDescription").textContent =
     projects[index].description;
 
@@ -394,8 +384,7 @@ async function openProject(index) {
         .catch(console.error);
     }
   } catch (error) {
-    slides.textContent =
-      "Could not load this PDF. Check the filename.";
+    slides.textContent = "Could not load this PDF. Check the filename.";
     console.error(error);
   }
 
@@ -414,7 +403,9 @@ async function showSlide(pageNumber) {
     `${currentPage} / ${pdf.numPages}`;
 
   await renderPage(
-    pdf, currentPage, document.getElementById("largeSlide"),
+    pdf,
+    currentPage,
+    document.getElementById("largeSlide"),
     window.innerWidth * 0.85,
     window.innerHeight * 0.78
   );
@@ -452,6 +443,7 @@ document.getElementById("prev").onclick = () => changeSlide(-1);
 document.getElementById("next").onclick = () => changeSlide(1);
 document.getElementById("closeButton").onclick = closeViewer;
 document.getElementById("backButton").onclick = goHome;
+
 document.getElementById("homeLink").onclick = (event) => {
   event.preventDefault();
   goHome();
@@ -463,7 +455,6 @@ document.getElementById("viewer").addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (!document.getElementById("viewer").classList.contains("open")) return;
-
   if (event.key === "ArrowRight") changeSlide(1);
   if (event.key === "ArrowLeft") changeSlide(-1);
   if (event.key === "Escape") closeViewer();
