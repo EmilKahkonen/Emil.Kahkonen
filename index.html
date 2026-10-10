@@ -268,30 +268,35 @@ const projects = [
     category: "EPFL · 2025",
     description: "Bio-Sourced Self-Bearing Watertight Building Envelopes, St. Loup Chapel.",
     file: "project-1.pdf"
+    cover: "covers/cover-1.jpg"
   },
   {
     title: "02 - Map",
     category: "EPFL · 2025",
     description: "The development of Zürich.",
     file: "project-2.pdf"
+    cover: "covers/cover-2.jpg"
   },
   {
     title: "03 - Lapinlahti",
     category: "Aalto · 2026",
     description: "A Reuse Plan for Lapinlahti Hospital.",
     file: "project-3.pdf"
+    cover: "covers/cover-3.jpg
   },
   {
     title: "04 - Cultural Centre",
     category: "Aalto · 2025",
     description: "A Solid Brick Structure for Culture in Taka-Töölö.",
     file: "project-4.pdf"
+    cover: "covers/cover-4.jpg"
   },
   {
     title: "05 - Apartment Building",
     category: "Aalto · 2025",
     description: "A Residential Building Shaped by a Rythm of Columns in Myllypuro.",
     file: "project-5.pdf"
+    cover: "covers/cover-5.jpg"
   }
 ];
 
@@ -333,6 +338,7 @@ async function renderPage(pdf, pageNumber, canvas, maxWidth, maxHeight) {
   }).promise;
 }
 
+
 async function init() {
   const container = document.getElementById("projects");
 
@@ -340,27 +346,24 @@ async function init() {
     const project = projects[i];
     const card = document.createElement("article");
     card.className = "project";
+
     card.innerHTML = `
-      <div class="cover"><canvas></canvas></div>
+      <div class="cover">
+        <img
+          src="${project.cover}"
+          alt="${project.title} cover"
+          style="width:100%;height:100%;object-fit:cover"
+        >
+      </div>
       <h2>${project.title}</h2>
       <p>${project.category}</p>
     `;
 
     card.addEventListener("click", () => openProject(i));
     container.appendChild(card);
-
-    try {
-      const pdf = await loadPDF(project);
-      await renderPage(
-        pdf, 1, card.querySelector("canvas"), 900, 650
-      );
-    } catch (error) {
-      card.querySelector(".cover").textContent =
-        "Could not load PDF";
-      console.error(error);
-    }
   }
 }
+
 
 async function openProject(index) {
   currentProject = index;
